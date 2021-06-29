@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/users', userRouter);
 
-app.listen(3000, () => {
-  console.log('App listen 3000');
+app.listen(3001, () => {
+  console.log('App listen 3001');
 });
 
 function _mongooseConnector() {

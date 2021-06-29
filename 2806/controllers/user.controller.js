@@ -4,9 +4,11 @@ const { UserModel } = require('../database');
 module.exports = {
   createUser: async (req, res, next) => {
     try {
-      const createdUser = await UserModel.create(req.body);
+      const { user } = req;
 
-      res.status(responseCodesEnum.CREATED).json(createdUser);
+      await UserModel.create(user);
+
+      res.status(responseCodesEnum.CREATED).json(user);
     } catch (e) {
       next(e);
     }
@@ -20,9 +22,9 @@ module.exports = {
       next(e);
     }
   },
-  getUserById: async (req, res, next) => {
+  getUserById: (req, res, next) => {
     try {
-      const user = await UserModel.findById(req.params);
+      const { user } = req;
 
       res.json(user);
     } catch (e) {
@@ -31,18 +33,20 @@ module.exports = {
   },
   updateUserById: async (req, res, next) => {
     try {
-      await UserModel.updateOne(req.body);
+      const user = req.body;
+      await UserModel.updateOne(user);
 
-      res.json(req.body);
+      res.json(user);
     } catch (e) {
       next(e);
     }
   },
   deleteUserById: async (req, res, next) => {
     try {
-      await UserModel.deleteOne(req.params);
+      const userId = req._id;
+      await UserModel.deleteOne(userId);
 
-      res.status(responseCodesEnum.NO_CONTENT).json(req.params);
+      res.status(responseCodesEnum.NO_CONTENT).json(userId);
     } catch (e) {
       next(e);
     }

@@ -5,18 +5,22 @@ const { UserModel } = require('../database');
 module.exports = {
   checkEmailBusy: async (req, res, next) => {
     try {
-      const userEmail = await UserModel.findOne(req.body);
+      const user = await UserModel.findOne({ email: req.body.email });
 
-      if (userEmail) {
+      if (user) {
         throw new Error(errorMessages.EMAIL_BUSY);
       }
+
+      req.user = req.body;
+
+      next();
     } catch (e) {
       next(e);
     }
   },
   checkIsUserPresent: async (req, res, next) => {
     try {
-      const { userId } = req.params;
+      const userId = req.params;
 
       const userById = await UserModel.findById(userId);
 
@@ -25,6 +29,10 @@ module.exports = {
           errorMessages.RECORD_NOT_FOUND.message,
           errorMessages.RECORD_NOT_FOUND.code);
       }
+
+      req.user = userById;
+
+      next();
     } catch (e) {
       next(e);
     }
