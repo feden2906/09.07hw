@@ -1,9 +1,13 @@
 module.exports = {
   RECORD_NOT_FOUND: {
-    message: 'Record not found',
+    message: 'Record not found.',
     code: '404.1'
   },
   EMAIL_BUSY: {
     message: 'Email is already registered.'
+  },
+  ROUT_NOT_FOUND: {
+    message: 'Rout not found.',
+    code: '404.2'
   }
 };

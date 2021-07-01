@@ -8,7 +8,7 @@ module.exports = {
       const user = await UserModel.findOne({ email: req.body.email });
 
       if (user) {
-        throw new Error(errorMessages.EMAIL_BUSY);
+        throw new ErrorHandler(errorMessages.EMAIL_BUSY);
       }
 
       req.user = req.body;
@@ -18,13 +18,19 @@ module.exports = {
       next(e);
     }
   },
+
   checkIsUserPresent: async (req, res, next) => {
     try {
-      const userId = req.params;
+      const { userId } = req.params;
 
-      const userById = await UserModel.findById(userId);
+      const userById = await UserModel.findOne({ _id: userId });
+      console.log(userId);
 
       if (!userById) {
+        console.log(responseCodesEnum.NOT_FOUND,
+          errorMessages.RECORD_NOT_FOUND.message,
+          errorMessages.RECORD_NOT_FOUND.code);
+
         throw new ErrorHandler(responseCodesEnum.NOT_FOUND,
           errorMessages.RECORD_NOT_FOUND.message,
           errorMessages.RECORD_NOT_FOUND.code);

@@ -13,6 +13,7 @@ module.exports = {
       next(e);
     }
   },
+
   getAllUsers: async (req, res, next) => {
     try {
       const users = await UserModel.find({});
@@ -22,6 +23,7 @@ module.exports = {
       next(e);
     }
   },
+
   getUserById: (req, res, next) => {
     try {
       const { user } = req;
@@ -31,20 +33,22 @@ module.exports = {
       next(e);
     }
   },
+
   updateUserById: async (req, res, next) => {
     try {
       const user = req.body;
       await UserModel.updateOne(user);
 
-      res.json(user);
+      res.status(responseCodesEnum.CREATED).json(user);
     } catch (e) {
       next(e);
     }
   },
+
   deleteUserById: async (req, res, next) => {
     try {
-      const userId = req._id;
-      await UserModel.deleteOne(userId);
+      const { userId } = req.params;
+      await UserModel.deleteOne({ userId });
 
       res.status(responseCodesEnum.NO_CONTENT).json(userId);
     } catch (e) {

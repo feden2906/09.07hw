@@ -5,8 +5,9 @@ const { userMiddlewar } = require('../middlewars');
 
 router.post('/', userMiddlewar.checkEmailBusy, userController.createUser);
 router.get('/', userController.getAllUsers);
-router.get('/:_id', userMiddlewar.checkIsUserPresent, userController.getUserById);
-router.put('/:_id', userMiddlewar.checkIsUserPresent, userController.updateUserById);
-router.delete('/:_id', userMiddlewar.checkIsUserPresent, userController.deleteUserById);
+
+router.get('/:userId', userMiddlewar.checkIsUserPresent, userController.getUserById);
+router.put('/:userId', userMiddlewar.checkIsUserPresent, userController.updateUserById);
+router.delete('/:userId', userMiddlewar.checkIsUserPresent, userController.deleteUserById);
 
 module.exports = router;
