@@ -1,14 +1,16 @@
+const { passwordHasher } = require('../helpers');
 const { responseCodesEnum } = require('../constants');
 const { UserModel } = require('../database');
 
 module.exports = {
   createUser: async (req, res, next) => {
     try {
-      const { user } = req;
+      const { password } = req.body;
 
-      await UserModel.create(user);
+      const hashedPassword = await passwordHasher.hash(password);
+      const createdUser = await UserModel.create({ ...req.body, password: hashedPassword });
 
-      res.status(responseCodesEnum.CREATED).json(user);
+      res.status(responseCodesEnum.CREATED).json(createdUser);
     } catch (e) {
       next(e);
     }
@@ -48,9 +50,9 @@ module.exports = {
   deleteUserById: async (req, res, next) => {
     try {
       const { userId } = req.params;
-      await UserModel.deleteOne({ userId });
+      await UserModel.deleteOne({ _id: userId });
 
-      res.status(responseCodesEnum.NO_CONTENT).json(userId);
+      res.status(responseCodesEnum.NO_CONTENT).json('Success');
     } catch (e) {
       next(e);
     }

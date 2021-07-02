@@ -1,6 +1,7 @@
 const { ErrorHandler, errorMessages } = require('../errors');
 const { responseCodesEnum } = require('../constants');
 const { UserModel } = require('../database');
+const { userValidator } = require('../validators');
 
 module.exports = {
   checkEmailBusy: async (req, res, next) => {
@@ -8,10 +9,26 @@ module.exports = {
       const user = await UserModel.findOne({ email: req.body.email });
 
       if (user) {
-        throw new ErrorHandler(errorMessages.EMAIL_BUSY);
+        throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR, errorMessages.EMAIL_BUSY);
       }
 
       req.user = req.body;
+
+      next();
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  checkUserValidity: (req, res, next) => {
+    try {
+      const { error } = userValidator.createUser.validate(req.body);
+
+      if (error) {
+        throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
+          errorMessages.FIELD_NOT_FILLED.message(error.details[0].message),
+          errorMessages.FIELD_NOT_FILLED.code);
+      }
 
       next();
     } catch (e) {
@@ -24,13 +41,8 @@ module.exports = {
       const { userId } = req.params;
 
       const userById = await UserModel.findOne({ _id: userId });
-      console.log(userId);
 
       if (!userById) {
-        console.log(responseCodesEnum.NOT_FOUND,
-          errorMessages.RECORD_NOT_FOUND.message,
-          errorMessages.RECORD_NOT_FOUND.code);
-
         throw new ErrorHandler(responseCodesEnum.NOT_FOUND,
           errorMessages.RECORD_NOT_FOUND.message,
           errorMessages.RECORD_NOT_FOUND.code);

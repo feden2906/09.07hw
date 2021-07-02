@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const { constants } = require('./constants');
+const { constants, responseCodesEnum } = require('./constants');
+const { errorMessages } = require('./errors');
 const { userRouter } = require('./routes');
 
 const app = express();
@@ -21,19 +22,20 @@ app.listen(constants.PORT, () => {
 
 function _notFoundHandler(req, res, next) {
   next({
-    status: 404,
-    message: 'Rout not fond'
+    status: responseCodesEnum.NOT_FOUND,
+    message: errorMessages.ROUT_NOT_FOUND.message,
+    code: errorMessages.ROUT_NOT_FOUND.code
   });
 }
 
 // eslint-disable-next-line no-unused-vars
 function _handleErrors(err, req, res, next) {
   res
-      .status(err.status)
-      .json({
-          message: err.message || 'Unknow error',
-          customCode: err.code || 0
-      });
+    .status(err.status)
+    .json({
+      message: err.message || 'Unknow error',
+      code: err.code || 0
+    });
 }
 
 function _mongooseConnector() {

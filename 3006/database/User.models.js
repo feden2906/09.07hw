@@ -4,18 +4,19 @@ const { databaseEnum } = require('../constants');
 
 const userShema = new Schema({
   name: {
-    type: String,
-    required: true
+    type: String
   },
   email: {
     type: String,
-    required: true,
     unique: true
   },
   password: {
     type: String,
-    select: false,
-    required: true
+    select: false
+  },
+  age: {
+    type: Number,
+    default: 18
   }
 });
 

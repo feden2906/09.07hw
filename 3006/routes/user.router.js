@@ -3,7 +3,7 @@ const router = require('express').Router();
 const { userController } = require('../controllers');
 const { userMiddlewar } = require('../middlewars');
 
-router.post('/', userMiddlewar.checkEmailBusy, userController.createUser);
+router.post('/', userMiddlewar.checkUserValidity, userMiddlewar.checkEmailBusy, userController.createUser);
 router.get('/', userController.getAllUsers);
 
 router.get('/:userId', userMiddlewar.checkIsUserPresent, userController.getUserById);
