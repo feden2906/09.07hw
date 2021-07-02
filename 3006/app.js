@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const { constants, responseCodesEnum } = require('./constants');
 const { errorMessages } = require('./errors');
-const { userRouter } = require('./routes');
+const { loginRouter, userRouter } = require('./routes');
 
 const app = express();
 
@@ -12,6 +12,7 @@ _mongooseConnector();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/login', loginRouter);
 app.use('/users', userRouter);
 app.use('*', _notFoundHandler);
 app.use(_handleErrors);

@@ -6,13 +6,13 @@ const { userValidator } = require('../validators');
 module.exports = {
   checkEmailBusy: async (req, res, next) => {
     try {
-      const user = await UserModel.findOne({ email: req.body.email });
+      const { email } = req.body;
 
-      if (user) {
+      const userByEmail = await UserModel.findOne({ email });
+
+      if (userByEmail) {
         throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR, errorMessages.EMAIL_BUSY);
       }
-
-      req.user = req.body;
 
       next();
     } catch (e) {

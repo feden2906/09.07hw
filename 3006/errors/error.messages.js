@@ -4,18 +4,19 @@ module.exports = {
     code: '404.1'
   },
   EMAIL_BUSY: {
-    message: 'Email is already registered.'
+    message: 'Email is already registered.',
+    code: '401.1'
   },
   ROUT_NOT_FOUND: {
     message: 'Rout not found.',
     code: '404.2'
   },
   WRONG_EMAIL_OR_PASS: {
-    message: 'Wrong email ro password',
-    code: '401.1'
+    message: 'Wrong email or password',
+    code: '401.2'
   },
   FIELD_NOT_FILLED: {
     message: (error) => error,
-    code: '401.2'
+    code: '401.3'
   }
 };
