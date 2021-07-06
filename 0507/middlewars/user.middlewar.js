@@ -36,6 +36,22 @@ module.exports = {
     }
   },
 
+  checkIsUpdatedDataValidity: (req, res, next) => {
+    try {
+      const { error } = userValidator.updateUser.validate(req.body);
+
+      if (error) {
+        throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
+          errorMessages.FIELD_NOT_FILLED.message(error.details[0].message),
+          errorMessages.FIELD_NOT_FILLED.code);
+      }
+
+      next();
+    } catch (e) {
+      next(e);
+    }
+  },
+
   checkIsUserPresent: async (req, res, next) => {
     try {
       const { userId } = req.params;

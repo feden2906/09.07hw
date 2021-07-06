@@ -8,5 +8,12 @@ module.exports = {
     email: Joi.string().regex(regexp.EMAIL_REGEXP).required(),
     password: Joi.string().min(6).max(50).required(),
     age: Joi.number().max(99).required()
+  }),
+
+  updateUser: Joi.object().keys({
+    name: Joi.string().min(3).max(25),
+    email: Joi.string().regex(regexp.EMAIL_REGEXP),
+    password: Joi.string().min(6).max(50),
+    age: Joi.number().max(99)
   })
 };
