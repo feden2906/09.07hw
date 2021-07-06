@@ -20,25 +20,9 @@ module.exports = {
     }
   },
 
-  checkUserValidity: (req, res, next) => {
+  checkDataValidity: (validator) => (req, res, next) => {
     try {
-      const { error } = userValidator.createUser.validate(req.body);
-
-      if (error) {
-        throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
-          errorMessages.FIELD_NOT_FILLED.message(error.details[0].message),
-          errorMessages.FIELD_NOT_FILLED.code);
-      }
-
-      next();
-    } catch (e) {
-      next(e);
-    }
-  },
-
-  checkIsUpdatedDataValidity: (req, res, next) => {
-    try {
-      const { error } = userValidator.updateUser.validate(req.body);
+      const { error } = userValidator[validator].validate(req.body);
 
       if (error) {
         throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
