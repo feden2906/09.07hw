@@ -1,4 +1,4 @@
-const { passwordHasher } = require('../helpers');
+const { passwordHasher } = require('../services');
 const { responseCodesEnum } = require('../constants');
 const { UserModel } = require('../database');
 

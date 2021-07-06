@@ -18,5 +18,13 @@ module.exports = {
   FIELD_NOT_FILLED: {
     message: (error) => error,
     code: '401.3'
+  },
+  NO_TOKEN: {
+    message: 'No token.',
+    code: '401.4'
+  },
+  WRONG_TOKEN: {
+    message: 'Wrong token.',
+    code: '401.5'
   }
 };

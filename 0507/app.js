@@ -2,9 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const { constants, responseCodesEnum } = require('./constants');
+const { envConstants, responseCodesEnum } = require('./constants');
 const { errorMessages } = require('./errors');
-const { loginRouter, userRouter } = require('./routes');
+const { authRouter, userRouter } = require('./routes');
 
 const app = express();
 
@@ -13,13 +13,13 @@ _mongooseConnector();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/login', loginRouter);
+app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('*', _notFoundHandler);
 app.use(_handleErrors);
 
-app.listen(constants.PORT, () => {
-  console.log(`App listen ${constants.PORT}`);
+app.listen(envConstants.PORT, () => {
+  console.log(`App listen ${envConstants.PORT}`);
 });
 
 function _notFoundHandler(req, res, next) {
@@ -41,7 +41,7 @@ function _handleErrors(err, req, res, next) {
 }
 
 function _mongooseConnector() {
-  mongoose.connect(constants.MONGOOSE_CONNECT, {
+  mongoose.connect(envConstants.MONGOOSE_CONNECT, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   });
