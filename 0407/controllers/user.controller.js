@@ -39,6 +39,7 @@ module.exports = {
   updateUserById: async (req, res, next) => {
     try {
       const user = req.body;
+
       await UserModel.updateOne(user);
 
       res.status(responseCodesEnum.CREATED).json(user);
@@ -49,8 +50,9 @@ module.exports = {
 
   deleteUserById: async (req, res, next) => {
     try {
-      const { userId } = req.params;
-      await UserModel.deleteOne({ _id: userId });
+      const { _id } = req.user;
+
+      await UserModel.deleteOne({ _id });
 
       res.status(responseCodesEnum.NO_CONTENT).json('Success');
     } catch (e) {

@@ -54,5 +54,19 @@ module.exports = {
     } catch (e) {
       next(e);
     }
+  },
+
+  getUserByDynamicParam: (paramName, serchIn = 'body', dbKey = paramName) => async (req, res, next) => {
+    try {
+      const valueOfParam = req[serchIn][paramName];
+
+      const user = await UserModel.findOne({ [dbKey]: valueOfParam });
+
+      req.user = user;
+
+      next();
+    } catch (e) {
+      next(e);
+    }
   }
 };

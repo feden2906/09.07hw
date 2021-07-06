@@ -1,4 +1,4 @@
 module.exports = {
-  PORT: 3000,
-  MONGOOSE_CONNECT: 'mongodb://localhost:27017/dec-2020'
+  PORT: process.env.PORT || 3001,
+  MONGOOSE_CONNECT: process.env.MONGOOSE_URL
 };
