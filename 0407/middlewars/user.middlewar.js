@@ -60,7 +60,7 @@ module.exports = {
     try {
       const valueOfParam = req[serchIn][paramName];
 
-      const user = await UserModel.findOne({ [dbKey]: valueOfParam });
+      const user = await UserModel.findOne({ [dbKey]: valueOfParam }).select('+password');
 
       req.user = user;
 
