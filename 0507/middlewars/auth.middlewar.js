@@ -16,7 +16,7 @@ module.exports = {
 
       await authService.verifyToken(token);
 
-      const objectByToken = await OAuthModel.findOne(token);
+      const objectByToken = await OAuthModel.findOne({ accessToken: token });
 
       if (!objectByToken) {
         throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,

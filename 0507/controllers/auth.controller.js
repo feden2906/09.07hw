@@ -36,7 +36,6 @@ module.exports = {
   logout: async (req, res, next) => {
     try {
       const token = req.get(AUTHORIZATION);
-
       await OAuthModel.remove({ accessTokne: token });
 
       res.status(responseCodesEnum.NO_CONTENT).json('Logout success');
