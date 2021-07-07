@@ -1,14 +1,17 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 
-const { envConstants: { ACCESS_TOKEN, REFRESH_TOKEN } } = require('../constants');
+const {
+  envConstants: { ACCESS_TOKEN, REFRESH_TOKEN },
+  nameConstants: { ACCESS_TOKEN_TIME, REFRESH_TOKEN_TIME }
+} = require('../constants');
 
 const verifyPromise = promisify(jwt.verify);
 
 module.exports = {
   generateTokenPAir: () => {
-    const accessToken = jwt.sign({}, ACCESS_TOKEN, { expiresIn: '10m' });
-    const refreshToken = jwt.sign({}, REFRESH_TOKEN, { expiresIn: '30d' });
+    const accessToken = jwt.sign({}, ACCESS_TOKEN, { expiresIn: ACCESS_TOKEN_TIME });
+    const refreshToken = jwt.sign({}, REFRESH_TOKEN, { expiresIn: REFRESH_TOKEN_TIME });
 
     return { accessToken, refreshToken };
   },
