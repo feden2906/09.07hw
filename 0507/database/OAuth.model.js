@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const { databaseEnum } = require('../constants');
 
-const oAuthShema = new Schema({
+const OAuthShema = new Schema({
   accessToken: {
     type: String,
     required: true
@@ -18,12 +18,12 @@ const oAuthShema = new Schema({
   }
 }, {
   timestamps: true,
-  toObject: { virtuals: true },
-  toJSON: { virtuals: true }
+  toObject: { virtual: true },
+  toJson: { virtual: true }
 });
 
-oAuthShema.pre('findOne', function() {
+OAuthShema.pre('findOne', function() {
   this.populate('user');
 });
 
-module.exports = model(databaseEnum.O_AUTH, oAuthShema);
+module.exports = model(databaseEnum.O_AUTH, OAuthShema);

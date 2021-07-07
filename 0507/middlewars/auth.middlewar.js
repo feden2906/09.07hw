@@ -1,12 +1,12 @@
+const { nameConstants: { AUTHORIZATION }, responseCodesEnum } = require('../constants');
 const { OAuthModel } = require('../database');
-const { nameConstants, responseCodesEnum } = require('../constants');
 const { ErrorHandler, errorMessages } = require('../errors');
 const { authService } = require('../services');
 
 module.exports = {
   checkAccessToken: async (req, res, next) => {
     try {
-      const token = req.get(nameConstants.AUTHORIZATION);
+      const token = req.get(AUTHORIZATION);
 
       if (!token) {
         throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
@@ -16,7 +16,7 @@ module.exports = {
 
       await authService.verifyToken(token);
 
-      const objectByToken = await OAuthModel.findOne({ accessToken: token });
+      const objectByToken = await OAuthModel.findOne(token);
 
       if (!objectByToken) {
         throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
