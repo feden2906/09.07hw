@@ -24,7 +24,7 @@ module.exports = {
         user: _id
       });
 
-      res.json({
+      res.status(responseCodesEnum.CREATED).json({
         ...tokenPair,
         user: req.user
       });
@@ -57,7 +57,7 @@ module.exports = {
         user: _id
       });
 
-      res.json({
+      res.status(responseCodesEnum.CREATED).json({
         ...tokenPair,
         user: req.user
       });
