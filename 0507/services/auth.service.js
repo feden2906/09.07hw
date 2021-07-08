@@ -9,7 +9,7 @@ const {
 const verifyPromise = promisify(jwt.verify);
 
 module.exports = {
-  generateTokenPAir: () => {
+  generateTokenPair: () => {
     const accessToken = jwt.sign({}, ACCESS_TOKEN, { expiresIn: ACCESS_TOKEN_TIME });
     const refreshToken = jwt.sign({}, REFRESH_TOKEN, { expiresIn: REFRESH_TOKEN_TIME });
 

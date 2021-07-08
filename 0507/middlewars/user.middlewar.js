@@ -25,9 +25,11 @@ module.exports = {
       const { error } = userValidator[validator].validate(req.body);
 
       if (error) {
-        throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
+        throw new ErrorHandler(
+          responseCodesEnum.AUTHENTICATION_ERROR,
           errorMessages.FIELD_NOT_FILLED.message(error.details[0].message),
-          errorMessages.FIELD_NOT_FILLED.code);
+          errorMessages.FIELD_NOT_FILLED.code
+        );
       }
 
       next();
@@ -43,9 +45,11 @@ module.exports = {
       const userById = await UserModel.findOne({ _id: userId });
 
       if (!userById) {
-        throw new ErrorHandler(responseCodesEnum.NOT_FOUND,
+        throw new ErrorHandler(
+          responseCodesEnum.NOT_FOUND,
           errorMessages.RECORD_NOT_FOUND.message,
-          errorMessages.RECORD_NOT_FOUND.code);
+          errorMessages.RECORD_NOT_FOUND.code
+        );
       }
 
       req.user = userById;

@@ -9,9 +9,11 @@ module.exports = {
       const token = req.get(AUTHORIZATION);
 
       if (!token) {
-        throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
+        throw new ErrorHandler(
+          responseCodesEnum.AUTHENTICATION_ERROR,
           errorMessages.NO_TOKEN.message,
-          errorMessages.NO_TOKEN.code);
+          errorMessages.NO_TOKEN.code
+        );
       }
 
       await authService.verifyToken(token);
@@ -19,9 +21,43 @@ module.exports = {
       const objectByToken = await OAuthModel.findOne({ accessToken: token });
 
       if (!objectByToken) {
-        throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
+        throw new ErrorHandler(
+          responseCodesEnum.AUTHENTICATION_ERROR,
           errorMessages.WRONG_TOKEN.message,
-          errorMessages.WRONG_TOKEN.code);
+          errorMessages.WRONG_TOKEN.code
+        );
+      }
+
+      req.user = objectByToken.user;
+
+      next();
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  checkRefreshToken: async (req, res, next) => {
+    try {
+      const token = req.get(AUTHORIZATION);
+
+      if (!token) {
+        throw new ErrorHandler(
+          responseCodesEnum.AUTHENTICATION_ERROR,
+          errorMessages.NO_TOKEN.message,
+          errorMessages.NO_TOKEN.code
+        );
+      }
+
+      await authService.verifyToken(token, 'refresh');
+
+      const objectByToken = await OAuthModel.findOne({ refreshToken: token });
+
+      if (!objectByToken) {
+        throw new ErrorHandler(
+          responseCodesEnum.AUTHENTICATION_ERROR,
+          errorMessages.WRONG_TOKEN.message,
+          errorMessages.WRONG_TOKEN.code
+        );
       }
 
       req.user = objectByToken.user;

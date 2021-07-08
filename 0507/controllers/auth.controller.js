@@ -7,9 +7,11 @@ module.exports = {
   login: async (req, res, next) => {
     try {
       if (!req.user) {
-        throw new ErrorHandler(responseCodesEnum.AUTHENTICATION_ERROR,
+        throw new ErrorHandler(
+          responseCodesEnum.AUTHENTICATION_ERROR,
           errorMessages.WRONG_EMAIL_OR_PASS.message,
-          errorMessages.WRONG_EMAIL_OR_PASS.code);
+          errorMessages.WRONG_EMAIL_OR_PASS.code
+        );
       }
 
       const { password: hashedPassword, _id } = req.user;
@@ -17,7 +19,7 @@ module.exports = {
 
       await passwordHasher.compare(hashedPassword, password);
 
-      const tokenPair = authService.generateTokenPAir();
+      const tokenPair = authService.generateTokenPair();
 
       await OAuthModel.create({
         ...tokenPair,
@@ -50,7 +52,7 @@ module.exports = {
 
       await OAuthModel.remove({ refreshToken });
 
-      const tokenPair = authService.generateTokenPAir();
+      const tokenPair = authService.generateTokenPair();
 
       await OAuthModel.create({
         ...tokenPair,
