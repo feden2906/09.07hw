@@ -26,5 +26,9 @@ module.exports = {
   WRONG_TOKEN: {
     message: 'Wrong token.',
     code: '401.5'
+  },
+  WRONG_TEMPLATE: {
+    message: 'Wrong template',
+    code: '404.2'
   }
 };

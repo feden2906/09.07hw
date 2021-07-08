@@ -1,0 +1,18 @@
+doctype html
+html 
+  head 
+    style 
+      include style.css 
+  body 
+    div 
+      | Hello #{name}
+      br
+      block content
+    hr
+    div.footer 
+      | Best regards
+      br
+      | site administration
+      br
+      | If you want to unsubscribe from newsletters 
+      a(href='http://localhost:3000/unsubscribe') Click here

@@ -1,14 +1,20 @@
 const { passwordHasher } = require('../services');
-const { responseCodesEnum } = require('../constants');
+const {
+  mailActionsEnum: { REGISTER, UPDATE, DELETE },
+  responseCodesEnum
+} = require('../constants');
 const { UserModel } = require('../database');
+const { mailService: { sendMail } } = require('../services');
 
 module.exports = {
   createUser: async (req, res, next) => {
     try {
-      const { password } = req.body;
+      const { email, name, password } = req.body;
 
       const hashedPassword = await passwordHasher.hash(password);
       const createdUser = await UserModel.create({ ...req.body, password: hashedPassword });
+
+      await sendMail(email, REGISTER, { name });
 
       res.status(responseCodesEnum.CREATED).json(createdUser);
     } catch (e) {
@@ -38,11 +44,20 @@ module.exports = {
 
   updateUserById: async (req, res, next) => {
     try {
-      const user = req.body;
+      const updateData = req.body;
+      const { user } = req;
 
-      await UserModel.updateOne(user);
+      await UserModel.updateOne(updateData);
+      await sendMail(user.email, UPDATE, {
+        name: user.name,
+        param: {
+          name: updateData.name || user.name,
+          email: updateData.email || user.email,
+          age: updateData.age || user.age,
+        }
+      });
 
-      res.status(responseCodesEnum.CREATED).json(user);
+      res.status(responseCodesEnum.CREATED).json(updateData);
     } catch (e) {
       next(e);
     }
@@ -50,9 +65,10 @@ module.exports = {
 
   deleteUserById: async (req, res, next) => {
     try {
-      const { _id } = req.user;
+      const { _id, email, name } = req.user;
 
       await UserModel.deleteOne({ _id });
+      await sendMail(email, DELETE, { name });
 
       res.status(responseCodesEnum.NO_CONTENT).json('Success');
     } catch (e) {
