@@ -2,9 +2,15 @@ const router = require('express').Router();
 
 const { nameConstants: { CREATE_USER, UPDATE_USER } } = require('../constants');
 const { userController } = require('../controllers');
-const { authMiddlewar, userMiddlewar } = require('../middlewars');
+const { authMiddlewar, fileMiddlewar, userMiddlewar } = require('../middlewars');
 
-router.post('/', userMiddlewar.checkDataValidity(CREATE_USER), userMiddlewar.checkEmailBusy, userController.createUser);
+router.post(
+  '/',
+  fileMiddlewar.checkFiles,
+  userMiddlewar.checkDataValidity(CREATE_USER),
+  userMiddlewar.checkEmailBusy,
+  userController.createUser
+);
 router.get('/', userController.getAllUsers);
 
 router.use('/:userId', userMiddlewar.getUserByDynamicParamWithoutPassword('userId', 'params', '_id'));

@@ -17,6 +17,12 @@ const userShema = new Schema({
   age: {
     type: Number,
     default: 18
+  },
+  documents: {
+    type: Array
+  },
+  images: {
+    type: Array
   }
 });
 

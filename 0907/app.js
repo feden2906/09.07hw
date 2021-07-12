@@ -1,6 +1,8 @@
-const express = require('express');
-const mongoose = require('mongoose');
 require('dotenv').config();
+const express = require('express');
+const fileUpload = require('express-fileupload');
+const mongoose = require('mongoose');
+const path = require('path');
 
 const { envConstants, responseCodesEnum } = require('./constants');
 const { errorMessages } = require('./errors');
@@ -12,6 +14,9 @@ _mongooseConnector();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(process.cwd(), 'static')));
+
+app.use(fileUpload());
 
 app.use('/auth', authRouter);
 app.use('/users', userRouter);

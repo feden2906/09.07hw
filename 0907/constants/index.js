@@ -1,5 +1,6 @@
 module.exports.databaseEnum = require('./database.enum');
 module.exports.envConstants = require('./env.constants');
+module.exports.fileConstants = require('./file.constants');
 module.exports.mailActionsEnum = require('./mail-actions.enum');
 module.exports.nameConstants = require('./name.constants');
 module.exports.regexp = require('./regexp');

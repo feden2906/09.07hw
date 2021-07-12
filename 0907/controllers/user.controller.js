@@ -4,16 +4,47 @@ const {
   responseCodesEnum
 } = require('../constants');
 const { UserModel } = require('../database');
-const { userHelper } = require('../helpers');
+const { fileHelper, userHelper } = require('../helpers');
 const { mailService: { sendMail } } = require('../services');
 
 module.exports = {
   createUser: async (req, res, next) => {
     try {
-      const { email, name, password } = req.body;
+      const {
+        body: { email, name, password },
+        documents,
+        images
+      } = req;
 
       const hashedPassword = await passwordHasher.hash(password);
       const createdUser = await UserModel.create({ ...req.body, password: hashedPassword });
+
+      const { _id } = createdUser;
+
+      if (documents.length) {
+        await documents.forEach((document) => {
+          const { finalFilePath, filePath } = fileHelper.fileDirBuilder('users', _id, document.name, 'documents');
+          document.mv(finalFilePath);
+          UserModel.updateOne({ _id }, {
+            documents: [
+              ...documents,
+              filePath
+            ]
+          });
+        });
+      }
+
+      if (images.length) {
+        await images.forEach((image) => {
+          const { finalFilePath, filePath } = fileHelper.fileDirBuilder('users', _id, image.name);
+          image.mv(finalFilePath);
+          UserModel.updateOne({ _id }, {
+            images: [...images,
+              filePath
+            ]
+          });
+        });
+      }
 
       await sendMail(email, REGISTER, { name });
       const userNormalized = await userHelper.userNormalizator(createdUser.toJSON());

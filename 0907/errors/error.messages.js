@@ -30,5 +30,13 @@ module.exports = {
   WRONG_TEMPLATE: {
     message: 'Wrong template',
     code: '404.2'
+  },
+  MAX_SIZE_FOR_MEDIA: {
+    message: (fileName, maxSize) => `${fileName} size is larger than ${maxSize}`,
+    code: '415.1'
+  },
+  WRONG_MIMETYPE: {
+    message: (fileName) => `Mimetype ${fileName} is not supported`,
+    code: '415.2'
   }
 };
