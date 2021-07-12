@@ -1,6 +1,7 @@
 const { ErrorHandler, errorMessages } = require('../errors');
 const { responseCodesEnum } = require('../constants');
 const { UserModel } = require('../database');
+const { userHelper } = require('../helpers');
 const { userValidator } = require('../validators');
 
 module.exports = {
@@ -38,21 +39,15 @@ module.exports = {
     }
   },
 
-  checkIsUserPresent: async (req, res, next) => {
+  getUserByDynamicParamWithoutPassword: (paramName, serchIn = 'body', dbKey = paramName) => async (req, res, next) => {
     try {
-      const { userId } = req.params;
+      const valueOfParam = req[serchIn][paramName];
 
-      const userById = await UserModel.findOne({ _id: userId });
+      const user = await UserModel.findOne({ [dbKey]: valueOfParam }).select('+password').lean();
 
-      if (!userById) {
-        throw new ErrorHandler(
-          responseCodesEnum.NOT_FOUND,
-          errorMessages.RECORD_NOT_FOUND.message,
-          errorMessages.RECORD_NOT_FOUND.code
-        );
-      }
+      const userNormalized = await userHelper.userNormalizator(user);
 
-      req.user = userById;
+      req.user = userNormalized;
 
       next();
     } catch (e) {
@@ -60,11 +55,11 @@ module.exports = {
     }
   },
 
-  getUserByDynamicParam: (paramName, serchIn = 'body', dbKey = paramName) => async (req, res, next) => {
+  getUserByDynamicParamWithPassword: (paramName, serchIn = 'body', dbKey = paramName) => async (req, res, next) => {
     try {
       const valueOfParam = req[serchIn][paramName];
 
-      const user = await UserModel.findOne({ [dbKey]: valueOfParam }).select('+password');
+      const user = await UserModel.findOne({ [dbKey]: valueOfParam }).select('+password').lean();
 
       req.user = user;
 
@@ -72,5 +67,5 @@ module.exports = {
     } catch (e) {
       next(e);
     }
-  }
+  },
 };

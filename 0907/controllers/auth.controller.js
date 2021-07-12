@@ -1,12 +1,15 @@
 const { nameConstants: { AUTHORIZATION }, responseCodesEnum } = require('../constants');
 const { OAuthModel } = require('../database');
 const { ErrorHandler, errorMessages } = require('../errors');
+const { userHelper } = require('../helpers');
 const { authService, passwordHasher } = require('../services');
 
 module.exports = {
   login: async (req, res, next) => {
     try {
-      if (!req.user) {
+      const { user } = req;
+
+      if (!user) {
         throw new ErrorHandler(
           responseCodesEnum.AUTHENTICATION_ERROR,
           errorMessages.WRONG_EMAIL_OR_PASS.message,
@@ -26,9 +29,11 @@ module.exports = {
         user: _id
       });
 
+      const userNormalized = await userHelper.userNormalizator(user);
+
       res.status(responseCodesEnum.CREATED).json({
         ...tokenPair,
-        user: req.user
+        user: userNormalized
       });
     } catch (e) {
       next(e);

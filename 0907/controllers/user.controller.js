@@ -4,6 +4,7 @@ const {
   responseCodesEnum
 } = require('../constants');
 const { UserModel } = require('../database');
+const { userHelper } = require('../helpers');
 const { mailService: { sendMail } } = require('../services');
 
 module.exports = {
@@ -15,8 +16,9 @@ module.exports = {
       const createdUser = await UserModel.create({ ...req.body, password: hashedPassword });
 
       await sendMail(email, REGISTER, { name });
+      const userNormalized = await userHelper.userNormalizator(createdUser.toJSON());
 
-      res.status(responseCodesEnum.CREATED).json(createdUser);
+      res.status(responseCodesEnum.CREATED).json(userNormalized);
     } catch (e) {
       next(e);
     }
@@ -24,9 +26,14 @@ module.exports = {
 
   getAllUsers: async (req, res, next) => {
     try {
-      const users = await UserModel.find({});
+      const users = await UserModel.find({}).lean();
+      const usersNormalized = [];
 
-      res.json(users);
+      await users.forEach((user) => {
+        usersNormalized.push(userHelper.userNormalizator(user));
+      });
+
+      res.json(usersNormalized);
     } catch (e) {
       next(e);
     }
